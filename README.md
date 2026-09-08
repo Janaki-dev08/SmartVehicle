@@ -540,5 +540,5 @@ If utilizing this codebase for academic research, benchmarking, or competition d
   url={https://github.com/your-username/smartvechicles}
 }
 ```
-=======
+
 
