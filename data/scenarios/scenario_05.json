@@ -1,0 +1,31 @@
+{
+  "id": "scenario_05",
+  "name": "Auto-Rickshaw Lateral Weaving",
+  "category": "Indian Mixed Traffic",
+  "difficulty": "Hard",
+  "description": "An auto-rickshaw ahead changes lateral position erratically across lanes, forcing dynamic real-time prediction and smooth trajectory adaptation.",
+  "road_width": 9.0,
+  "start_position": {
+    "x": 0.0,
+    "y": 0.0,
+    "heading": 0.0
+  },
+  "destination": {
+    "x": 150.0,
+    "y": 0.0
+  },
+  "actors": [
+    {
+      "id": 1,
+      "type": "auto_rickshaw",
+      "rel_x": 20.0,
+      "rel_y": 0.0,
+      "rel_z": 0.0,
+      "speed": 5.0,
+      "heading": 0.0,
+      "behavior": "weave",
+      "weave_amplitude": 1.8,
+      "weave_freq": 0.8
+    }
+  ]
+}

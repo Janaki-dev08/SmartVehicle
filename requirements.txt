@@ -1,0 +1,26 @@
+# Autonomous Vehicle Simulation & Planning Dependencies
+fastapi>=0.110.0
+uvicorn[standard]>=0.28.0
+websockets>=12.0
+pydantic>=2.6.0
+python-dotenv>=1.0.1
+requests>=2.31.0
+httpx>=0.27.0
+
+# Scientific & Math Computing
+numpy>=1.24.0
+scipy>=1.11.0
+matplotlib>=3.8.0
+pandas>=2.1.0
+shapely>=2.0.0
+opencv-python>=4.8.0
+
+# Reinforcement Learning & Simulation (Gymnasium + Stable-Baselines3)
+gymnasium>=0.29.1
+stable-baselines3>=2.3.0
+torch>=2.2.0
+
+# Testing & Utilities
+pytest>=8.0.0
+pytest-asyncio>=0.23.0
+pyyaml>=6.0.1

@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: av_simulation_backend
+    ports:
+      - "8000:8000"
+    environment:
+      - CARLA_HOST=host.docker.internal
+      - CARLA_PORT=2000
+      - MAX_SPEED=40.0
+      - TTC_CRITICAL_THRESHOLD=1.5
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped

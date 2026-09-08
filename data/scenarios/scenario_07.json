@@ -1,0 +1,31 @@
+{
+  "id": "scenario_07",
+  "name": "Stray Animal on Highway",
+  "category": "Suburban / Rural",
+  "difficulty": "Hard",
+  "description": "A stray cow/animal slowly enters and stops directly in the center of the lane. Autonomous system must identify animal classification, halt safely, and replan around when clear.",
+  "road_width": 8.0,
+  "start_position": {
+    "x": 0.0,
+    "y": 0.0,
+    "heading": 0.0
+  },
+  "destination": {
+    "x": 120.0,
+    "y": 0.0
+  },
+  "actors": [
+    {
+      "id": 1,
+      "type": "animal",
+      "rel_x": 28.0,
+      "rel_y": 3.0,
+      "rel_z": 0.0,
+      "speed": 0.8,
+      "heading": -80.0,
+      "behavior": "wander_and_stop",
+      "target_y": 0.2,
+      "trigger_dist": 35.0
+    }
+  ]
+}

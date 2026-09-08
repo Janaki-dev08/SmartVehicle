@@ -1,0 +1,39 @@
+{
+  "id": "scenario_01",
+  "name": "Unmarked Narrow Road",
+  "category": "Rural / Semi-Urban",
+  "difficulty": "Easy",
+  "description": "Narrow two-way rural Indian road without lane markings. Requires centered path keeping and road boundary adherence.",
+  "road_width": 6.5,
+  "start_position": {
+    "x": 0.0,
+    "y": 0.0,
+    "heading": 0.0
+  },
+  "destination": {
+    "x": 120.0,
+    "y": 0.0
+  },
+  "actors": [
+    {
+      "id": 1,
+      "type": "debris",
+      "rel_x": 45.0,
+      "rel_y": 1.2,
+      "rel_z": 0.0,
+      "speed": 0.0,
+      "heading": 0.0,
+      "behavior": "static"
+    },
+    {
+      "id": 2,
+      "type": "bicycle",
+      "rel_x": 75.0,
+      "rel_y": 2.2,
+      "rel_z": 0.0,
+      "speed": 3.0,
+      "heading": 0.0,
+      "behavior": "forward_slow"
+    }
+  ]
+}

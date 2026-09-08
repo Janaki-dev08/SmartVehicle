@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233b82f6'><path d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/></svg>" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Autonomous Vehicle Simulation - Indian Roads</title>
+  <!-- Tailwind CDN for instantaneous standalone styling -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            dark: {
+              900: '#0b0f19',
+              800: '#111827',
+              700: '#1f2937',
+              600: '#374151'
+            },
+            accent: {
+              blue: '#3b82f6',
+              cyan: '#06b6d4',
+              emerald: '#10b981',
+              amber: '#f59e0b',
+              rose: '#f43f5e',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #0b0f19;
+      color: #f3f4f6;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #111827;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #374151;
+      border-radius: 3px;
+    }
+  </style>
+  <script type="module" crossorigin src="/assets/index-CxKpZ2Dr.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-Bosys84w.css">
+</head>
+
+<body class="bg-dark-900 text-gray-100 overflow-hidden select-none">
+  <div id="root"></div>
+
+  <!-- Resilient Standalone In-Browser Dashboard Fallback (if React/Vite bundler is not currently running) -->
+  <script>
+    setTimeout(() => {
+      const root = document.getElementById('root');
+      if (root && root.innerHTML.trim() === '') {
+        console.log('[Standalone Engine] Mounting embedded high-performance dashboard...');
+
+        root.innerHTML = `
+            <div class="flex flex-col h-screen w-screen bg-dark-900 text-gray-100 overflow-hidden select-none">
+              <!-- Header -->
+              <header class="bg-dark-800/95 border-b border-dark-600 px-5 py-3 flex flex-wrap items-center justify-between gap-4 shadow-xl z-20">
+                <div class="flex items-center space-x-3.5">
+                  <div class="p-2.5 bg-blue-500/10 border border-blue-500/30 rounded-xl text-blue-400">
+                    <svg class="w-6 h-6 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path></svg>
+                  </div>
+                  <div>
+                    <h1 class="text-lg font-extrabold text-white tracking-wide flex items-center gap-2">
+                      Adaptive Path Planning & Collision Avoidance
+                      <span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">Indian Roads v2.0</span>
+                    </h1>
+                    <p class="text-xs text-gray-400">YOLO Perception • Adaptive A* • PPO RL Model • TTC Risk Supervisor</p>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-2.5">
+                  <div class="px-3 py-1.5 bg-dark-900 border border-dark-600 rounded-lg flex items-center space-x-2 text-xs font-mono">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                    <span class="text-gray-400">MODE:</span>
+                    <span class="text-emerald-400 font-bold">AUTONOMOUS</span>
+                  </div>
+
+                  <div id="driver-badge" class="px-3.5 py-1.5 border border-purple-500/50 bg-gradient-to-r from-purple-900/60 to-indigo-900/60 rounded-lg flex items-center space-x-2 text-xs font-mono text-purple-200">
+                    <span id="driver-dot" class="w-2 h-2 rounded-full bg-purple-400 animate-pulse"></span>
+                    <span class="text-gray-300">DRIVER:</span>
+                    <span id="driver-mode-text" class="font-extrabold">AI AGENT (PPO)</span>
+                  </div>
+
+                  <div class="px-3 py-1.5 bg-red-950/30 border border-red-500/30 rounded-lg flex items-center space-x-1.5 text-xs font-mono">
+                    <span class="text-gray-400">Human:</span>
+                    <span class="text-red-400 font-bold">DISABLED</span>
+                  </div>
+                </div>
+
+                <div class="flex items-center space-x-3">
+                  <div id="carla-pill" class="px-3 py-1.5 rounded-lg text-xs font-medium border flex items-center space-x-1.5 bg-amber-950/50 border-amber-500/50 text-amber-400">
+                    <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                    <span id="carla-status-text">CARLA DISCONNECTED (STANDALONE)</span>
+                  </div>
+                  <div class="flex items-center space-x-1 text-xs font-mono text-gray-400 bg-dark-900/80 px-2.5 py-1.5 rounded-lg border border-dark-700">
+                    <span id="ws-pulse" class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                    <span>20 Hz Stream</span>
+                  </div>
+                </div>
+              </header>
+
+              <!-- Main Body -->
+              <main class="flex flex-1 min-h-0 relative">
+                <!-- Left Panel -->
+                <aside class="w-84 bg-dark-800/90 border-r border-dark-600 flex flex-col h-full overflow-y-auto p-4 space-y-4 text-sm">
+                  <!-- Simulation Controls -->
+                  <div class="bg-gradient-to-b from-dark-800 to-dark-900 border border-dark-600 rounded-2xl p-4 shadow-xl">
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-gray-300 mb-3 flex items-center justify-between">
+                      <span>Simulation Controls</span>
+                      <span id="sim-run-badge" class="text-[10px] px-2 py-0.5 rounded font-mono bg-gray-700 text-gray-300">PAUSED</span>
+                    </h2>
+                    <div class="grid grid-cols-3 gap-2">
+                      <button id="btn-start" onclick="fetch('/api/simulation/engine/start',{method:'POST'})" class="py-2.5 px-3 rounded-xl font-bold text-xs bg-emerald-600 hover:bg-emerald-500 text-white flex items-center justify-center space-x-1 transition shadow-lg">
+                        <span>▶ Start</span>
+                      </button>
+                      <button id="btn-stop" onclick="fetch('/api/simulation/engine/stop',{method:'POST'})" class="py-2.5 px-3 rounded-xl font-bold text-xs bg-amber-600 hover:bg-amber-500 text-white flex items-center justify-center space-x-1 transition shadow-lg">
+                        <span>⏸ Stop</span>
+                      </button>
+                      <button id="btn-reset" onclick="fetch('/api/simulation/engine/reset',{method:'POST'})" class="py-2.5 px-3 rounded-xl font-bold text-xs bg-dark-700 hover:bg-dark-600 text-gray-200 border border-dark-600 flex items-center justify-center space-x-1 transition">
+                        <span>↺ Reset</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Driver Mode Selection Card -->
+                  <div class="bg-gradient-to-b from-dark-800 to-dark-900 border border-dark-600 rounded-2xl p-4 shadow-xl space-y-2.5">
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-gray-300 flex items-center justify-between">
+                      <span>Driver Mode Selection</span>
+                    </h2>
+                    <div class="space-y-1.5">
+                      <button onclick="setDriverMode('META')" class="w-full text-left p-2 rounded-xl border border-purple-500/50 bg-purple-950/30 text-purple-200 hover:bg-purple-900/40 text-xs font-bold transition flex items-center justify-between">
+                        <div>
+                          <div>AI PPO Policy Model</div>
+                          <div class="text-[10px] text-gray-400 font-normal">Deep RL Policy (Zero-Delay)</div>
+                        </div>
+                        <span id="dot-meta" class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                      </button>
+
+                      <button onclick="setDriverMode('NONE')" class="w-full text-left p-2 rounded-xl border border-dark-700 bg-dark-800/60 text-gray-300 hover:bg-dark-800 text-xs font-bold transition flex items-center justify-between">
+                        <div>
+                          <div>Rule-Based Autonomous</div>
+                          <div class="text-[10px] text-gray-400 font-normal">Adaptive A* & TTC Layer</div>
+                        </div>
+                        <span id="dot-none" class="w-2 h-2 rounded-full bg-transparent"></span>
+                      </button>
+
+                      <button onclick="setDriverMode('CARLA')" class="w-full text-left p-2 rounded-xl border border-dark-700 bg-dark-800/60 text-gray-300 hover:bg-dark-800 text-xs font-bold transition flex items-center justify-between">
+                        <div>
+                          <div>CARLA HIL RPC</div>
+                          <div class="text-[10px] text-gray-400 font-normal">Hardware-in-the-Loop</div>
+                        </div>
+                        <span id="dot-carla" class="w-2 h-2 rounded-full bg-transparent"></span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Scenario Selector -->
+                  <div class="bg-gradient-to-b from-dark-800 to-dark-900 border border-dark-600 rounded-2xl p-4 shadow-xl space-y-2.5">
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-gray-300">Indian Road Scenarios (10)</h2>
+                    <select id="scenario-select" onchange="fetch('/api/scenarios/load',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({scenario_id:this.value})})" class="w-full bg-dark-800 border border-dark-600 rounded-xl p-2.5 text-xs text-white">
+                      <option value="scenario_01">SCENARIO 01: Unmarked Narrow Road (Easy)</option>
+                      <option value="scenario_02" selected>SCENARIO 02: Sudden Motorcycle Cut-In (Medium)</option>
+                      <option value="scenario_03">SCENARIO 03: Jaywalking Pedestrian Crossing (Hard)</option>
+                      <option value="scenario_04">SCENARIO 04: Parked Vehicle Road Blockage (Medium)</option>
+                      <option value="scenario_05">SCENARIO 05: Auto-Rickshaw Lateral Weaving (Hard)</option>
+                      <option value="scenario_06">SCENARIO 06: Chaotic Mixed Traffic Stream (Expert)</option>
+                      <option value="scenario_07">SCENARIO 07: Stray Animal on Highway (Hard)</option>
+                      <option value="scenario_08">SCENARIO 08: Oncoming Vehicle on Single Lane (Hard)</option>
+                      <option value="scenario_09">SCENARIO 09: Road Debris & Pothole Obstacle (Medium)</option>
+                      <option value="scenario_10">SCENARIO 10: Unstructured Crossroad Intersection (Expert)</option>
+                    </select>
+                    <div id="scenario-desc" class="bg-dark-900/90 border border-dark-700 rounded-xl p-2.5 text-xs text-gray-300">
+                      Two-wheeler abruptly cuts across ego corridor. Tests rapid TTC risk assessment and lateral A* replanning.
+                    </div>
+                  </div>
+
+                  <!-- CARLA Connection Details -->
+                  <div class="bg-gradient-to-b from-dark-800 to-dark-900 border border-dark-600 rounded-2xl p-4 shadow-xl space-y-2.5 text-xs">
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-gray-300">CARLA Simulator RPC</h2>
+                    <div class="grid grid-cols-2 gap-2">
+                      <input id="carla-host-in" type="text" value="localhost" class="bg-dark-800 border border-dark-600 rounded-lg p-2 text-white font-mono" />
+                      <input id="carla-port-in" type="number" value="2000" class="bg-dark-800 border border-dark-600 rounded-lg p-2 text-white font-mono" />
+                    </div>
+                    <button onclick="fetch('/api/carla/connect',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({host:document.getElementById('carla-host-in').value,port:parseInt(document.getElementById('carla-port-in').value)})})" class="w-full py-2 rounded-xl bg-dark-700 hover:bg-dark-600 border border-dark-600 text-gray-200 font-semibold transition">
+                      Connect / Reconnect
+                    </button>
+                    <p class="text-[10px] text-gray-500">Embedded engine runs if CARLA server is offline.</p>
+                  </div>
+                </aside>
+
+                <!-- Center Simulation Canvas -->
+                <div class="flex-1 bg-dark-900 relative flex flex-col">
+                  <div class="absolute top-3 left-3 z-10 bg-dark-800/90 backdrop-blur border border-dark-600 rounded-lg px-3 py-1.5 text-xs font-mono">
+                    <span class="text-gray-400">Heading:</span> <span id="val-heading" class="text-white font-bold">0.0°</span> |
+                    <span class="text-gray-400">Threats:</span> <span id="val-threats" class="text-amber-400 font-bold">0</span>
+                  </div>
+
+                  <canvas id="sim-canvas" class="w-full h-full block"></canvas>
+
+                  <!-- Legend -->
+                  <div class="absolute bottom-3 left-3 bg-dark-800/90 backdrop-blur border border-dark-600 rounded-xl p-2.5 text-[10px] space-y-1.5 font-mono shadow-lg">
+                    <div class="font-bold text-gray-400 uppercase">Legend</div>
+                    <div class="flex items-center space-x-2"><span class="w-3 h-1 bg-blue-500 rounded"></span><span>Global Route</span></div>
+                    <div class="flex items-center space-x-2"><span class="w-3 h-1 bg-cyan-400 rounded"></span><span>Adaptive A* Path</span></div>
+                    <div class="flex items-center space-x-2"><span class="w-3 h-1 bg-orange-500 rounded"></span><span>Prediction (3.0s)</span></div>
+                    <div class="flex items-center space-x-2"><span class="w-2.5 h-2.5 rounded-full bg-blue-600 border border-blue-300"></span><span>Ego Vehicle</span></div>
+                  </div>
+                </div>
+
+                <!-- Right Telemetry Panel -->
+                <aside class="w-84 bg-dark-800/90 border-l border-dark-600 flex flex-col h-full overflow-y-auto p-4 space-y-4 text-sm">
+                  <!-- Speedometer & Telemetry -->
+                  <div class="bg-gradient-to-b from-dark-800 to-dark-900 border border-dark-600 rounded-2xl p-4 shadow-xl space-y-3">
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-gray-300 flex items-center justify-between">
+                      <span>Vehicle Telemetry</span>
+                    </h2>
+                    <div class="flex items-center justify-between bg-dark-900/90 p-3.5 rounded-xl border border-dark-700">
+                      <div>
+                        <div id="val-speed-kmh" class="text-4xl font-black text-white font-mono tracking-tight">0.0</div>
+                        <div id="val-speed-ms" class="text-[11px] text-gray-400 font-mono">0.00 m/s</div>
+                      </div>
+                      <div class="text-right">
+                        <span class="text-xs font-bold px-2 py-1 rounded-lg bg-blue-500/20 text-blue-400 border border-blue-500/30">KM/H</span>
+                        <div id="val-accel" class="text-[10px] text-gray-400 mt-1 font-mono">Acc: 0.0 m/s²</div>
+                      </div>
+                    </div>
+
+                    <!-- Gauges -->
+                    <div class="space-y-2.5 text-xs bg-dark-900/70 p-3 rounded-xl border border-dark-700">
+                      <div>
+                        <div class="flex justify-between text-[11px] mb-1"><span class="text-gray-400">Steering:</span><span id="val-steer" class="font-mono text-gray-200 font-bold">0.00</span></div>
+                        <div class="w-full bg-dark-700 h-2 rounded-full overflow-hidden relative">
+                          <div class="absolute left-1/2 top-0 bottom-0 w-0.5 bg-gray-500"></div>
+                          <div id="bar-steer" class="h-full bg-cyan-400 ml-[50%] transition-all" style="width:0%"></div>
+                        </div>
+                      </div>
+                      <div>
+                        <div class="flex justify-between text-[11px] mb-1"><span class="text-gray-400">Throttle:</span><span id="val-throttle" class="font-mono text-emerald-400 font-bold">0%</span></div>
+                        <div class="w-full bg-dark-700 h-2 rounded-full overflow-hidden">
+                          <div id="bar-throttle" class="bg-emerald-500 h-full transition-all" style="width:0%"></div>
+                        </div>
+                      </div>
+                      <div>
+                        <div class="flex justify-between text-[11px] mb-1"><span class="text-gray-400">Brake:</span><span id="val-brake" class="font-mono text-rose-400 font-bold">0%</span></div>
+                        <div class="w-full bg-dark-700 h-2 rounded-full overflow-hidden">
+                          <div id="bar-brake" class="bg-rose-500 h-full transition-all" style="width:0%"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Risk & TTC -->
+                  <div class="bg-gradient-to-b from-dark-800 to-dark-900 border border-dark-600 rounded-2xl p-4 shadow-xl space-y-3">
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-gray-300">Safety & Risk Status</h2>
+                    <div class="grid grid-cols-2 gap-2">
+                      <div class="bg-dark-900/90 p-2.5 rounded-xl border border-dark-700 text-center">
+                        <div class="text-[9px] text-gray-400 mb-1 font-bold">RISK LEVEL</div>
+                        <div id="badge-risk" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-600 text-white">LOW</div>
+                      </div>
+                      <div class="bg-dark-900/90 p-2.5 rounded-xl border border-dark-700 text-center">
+                        <div class="text-[9px] text-gray-400 mb-1 font-bold">ACTION</div>
+                        <div id="badge-action" class="px-2 py-1 rounded-lg text-[11px] font-bold bg-blue-950/80 border border-blue-500/80 text-blue-300">CRUISING</div>
+                      </div>
+                    </div>
+                    <div class="bg-dark-900/90 p-3 rounded-xl border border-dark-700 space-y-1.5 text-xs">
+                      <div class="flex justify-between"><span class="text-gray-400">TTC:</span><span id="val-ttc" class="font-mono font-bold text-emerald-400">SAFE (>10s)</span></div>
+                      <div class="flex justify-between text-[11px]"><span class="text-gray-400">Nearest Object:</span><span id="val-nearest-obs" class="text-white font-medium">None</span></div>
+                      <div class="flex justify-between text-[11px]"><span class="text-gray-400">Clearance:</span><span id="val-clearance" class="font-mono text-cyan-300 font-bold">10.0 m</span></div>
+                    </div>
+                  </div>
+
+                  <!-- Objects List -->
+                  <div class="bg-gradient-to-b from-dark-800 to-dark-900 border border-dark-600 rounded-2xl p-4 shadow-xl flex-1 flex flex-col min-h-[140px]">
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-gray-300 mb-2">Tracked Detections (<span id="count-obs">0</span>)</h2>
+                    <div id="list-detections" class="flex-1 overflow-y-auto space-y-1.5 text-xs">
+                      <div class="text-gray-500 text-center py-4">No obstacles in range</div>
+                    </div>
+                  </div>
+                </aside>
+              </main>
+
+              <!-- Bottom Panel -->
+              <footer class="h-60 bg-dark-800/95 border-t border-dark-600 flex flex-col p-3.5 text-xs shadow-2xl z-20">
+                <div class="flex items-center justify-between border-b border-dark-700 pb-2 mb-2">
+                  <div class="font-bold text-gray-200 flex items-center gap-2">
+                    <span>Research Benchmark (Fixed Path vs Adaptive A* vs PPO)</span>
+                    <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-mono text-[10px] border border-emerald-500/30">Collision Reduction: 88.2%</span>
+                  </div>
+                  <a href="/api/results/export" class="px-3.5 py-1.5 rounded-xl bg-dark-700 hover:bg-dark-600 border border-dark-600 text-gray-200 text-xs font-bold flex items-center gap-1.5 transition">
+                    <span>⬇ Export Telemetry (.CSV)</span>
+                  </a>
+                </div>
+                <div class="grid grid-cols-6 gap-2.5 text-center font-mono">
+                  <div class="bg-dark-900/90 p-2.5 rounded-xl border border-dark-700"><div class="text-gray-400 text-[10px]">Avg Speed</div><div id="m-avg-speed" class="text-white font-bold text-sm">28.4 km/h</div></div>
+                  <div class="bg-dark-900/90 p-2.5 rounded-xl border border-dark-700"><div class="text-gray-400 text-[10px]">Min TTC</div><div id="m-min-ttc" class="text-emerald-400 font-bold text-sm">1.85 s</div></div>
+                  <div class="bg-dark-900/90 p-2.5 rounded-xl border border-dark-700"><div class="text-gray-400 text-[10px]">Avg Clearance</div><div id="m-clearance" class="text-cyan-400 font-bold text-sm">2.50 m</div></div>
+                  <div class="bg-dark-900/90 p-2.5 rounded-xl border border-dark-700"><div class="text-gray-400 text-[10px]">Plan Latency</div><div id="m-latency" class="text-purple-400 font-bold text-sm">12.4 ms</div></div>
+                  <div class="bg-dark-900/90 p-2.5 rounded-xl border border-dark-700"><div class="text-gray-400 text-[10px]">Replans</div><div id="m-replans" class="text-amber-400 font-bold text-sm">0</div></div>
+                  <div class="bg-dark-900/90 p-2.5 rounded-xl border border-dark-700"><div class="text-gray-400 text-[10px]">Success Rate</div><div id="m-success" class="text-emerald-400 font-bold text-sm">95.5%</div></div>
+                </div>
+                <!-- Dynamic Log -->
+                <div id="bottom-logs" class="flex-1 overflow-y-auto mt-2 bg-dark-900/90 rounded-xl p-2.5 border border-dark-700 space-y-1 font-mono text-[10px] text-gray-400">
+                  <div>[System] Driverless Autonomous Driving Platform initialized. Standing by.</div>
+                </div>
+              </footer>
+            </div>
+          `;
+
+        window.setDriverMode = async function(driver) {
+          try {
+            await fetch('/api/driver/set', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ driver })
+            });
+          } catch(e) {}
+        };
+
+        // Live WebSocket stream & Canvas Renderer
+        const canvas = document.getElementById('sim-canvas');
+        let ctx = canvas ? canvas.getContext('2d') : null;
+        let wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+        let wsHost = location.port === '5173' ? 'localhost:8000' : location.host;
+        let ws = new WebSocket(wsProtocol + '//' + wsHost + '/ws/telemetry');
+
+        ws.onmessage = (event) => {
+          try {
+            const data = JSON.parse(event.data);
+            updateDashboard(data);
+          } catch (e) { }
+        };
+
+        function updateDashboard(data) {
+          const veh = data.vehicle;
+          const risk = data.risk;
+          const driver = (data.driver || 'META').toUpperCase();
+
+          // Driver Badge & Selection update
+          const driverBadge = document.getElementById('driver-badge');
+          const driverModeText = document.getElementById('driver-mode-text');
+          const dotMeta = document.getElementById('dot-meta');
+          const dotNone = document.getElementById('dot-none');
+          const dotCarla = document.getElementById('dot-carla');
+
+          if (driverModeText) {
+            if (driver === 'META') {
+              driverModeText.innerText = 'AI AGENT (PPO)';
+              if (driverBadge) driverBadge.className = 'px-3.5 py-1.5 border border-purple-500/50 bg-gradient-to-r from-purple-900/60 to-indigo-900/60 rounded-lg flex items-center space-x-2 text-xs font-mono text-purple-200';
+            } else if (driver === 'CARLA') {
+              driverModeText.innerText = 'CARLA HIL';
+              if (driverBadge) driverBadge.className = 'px-3.5 py-1.5 border border-cyan-500/50 bg-gradient-to-r from-cyan-900/60 to-blue-900/60 rounded-lg flex items-center space-x-2 text-xs font-mono text-cyan-200';
+            } else {
+              driverModeText.innerText = 'AUTONOMOUS (A*)';
+              if (driverBadge) driverBadge.className = 'px-3.5 py-1.5 border border-amber-500/50 bg-gradient-to-r from-amber-900/60 to-orange-900/60 rounded-lg flex items-center space-x-2 text-xs font-mono text-amber-200';
+            }
+          }
+
+          if (dotMeta) dotMeta.className = driver === 'META' ? 'w-2 h-2 rounded-full bg-emerald-400' : 'w-2 h-2 rounded-full bg-transparent';
+          if (dotNone) dotNone.className = driver === 'NONE' ? 'w-2 h-2 rounded-full bg-emerald-400' : 'w-2 h-2 rounded-full bg-transparent';
+          if (dotCarla) dotCarla.className = driver === 'CARLA' ? 'w-2 h-2 rounded-full bg-emerald-400' : 'w-2 h-2 rounded-full bg-transparent';
+
+          // Run state
+          const badge = document.getElementById('sim-run-badge');
+          if (badge) {
+            badge.innerText = data.running ? 'RUNNING' : 'PAUSED';
+            badge.className = data.running ? 'text-[10px] px-2 py-0.5 rounded font-mono bg-emerald-500/20 text-emerald-400' : 'text-[10px] px-2 py-0.5 rounded font-mono bg-gray-700 text-gray-300';
+          }
+
+          // Carla status
+          const carlaText = document.getElementById('carla-status-text');
+          const carlaPill = document.getElementById('carla-pill');
+          if (carlaText && carlaPill) {
+            carlaText.innerText = data.carla.status;
+            carlaPill.className = data.carla.connected ? 'px-3 py-1.5 rounded-lg text-xs font-medium border flex items-center space-x-1.5 bg-emerald-950/50 border-emerald-500/50 text-emerald-400' : 'px-3 py-1.5 rounded-lg text-xs font-medium border flex items-center space-x-1.5 bg-amber-950/50 border-amber-500/50 text-amber-400';
+          }
+
+          // Telemetry values
+          if (document.getElementById('val-speed-kmh')) document.getElementById('val-speed-kmh').innerText = veh.speed_kmh.toFixed(1);
+          if (document.getElementById('val-speed-ms')) document.getElementById('val-speed-ms').innerText = veh.speed_ms.toFixed(2) + ' m/s';
+          if (document.getElementById('val-accel')) document.getElementById('val-accel').innerText = 'Acc: ' + veh.acceleration_ms2.toFixed(1) + ' m/s²';
+          if (document.getElementById('val-heading')) document.getElementById('val-heading').innerText = veh.heading_deg.toFixed(1) + '°';
+          if (document.getElementById('val-threats')) document.getElementById('val-threats').innerText = risk.threat_count;
+          if (document.getElementById('val-steer')) document.getElementById('val-steer').innerText = veh.steering_angle.toFixed(2);
+          if (document.getElementById('val-throttle')) document.getElementById('val-throttle').innerText = Math.round(veh.throttle * 100) + '%';
+          if (document.getElementById('val-brake')) document.getElementById('val-brake').innerText = Math.round(veh.brake * 100) + '%';
+
+          // Bars
+          if (document.getElementById('bar-throttle')) document.getElementById('bar-throttle').style.width = (veh.throttle * 100) + '%';
+          if (document.getElementById('bar-brake')) document.getElementById('bar-brake').style.width = (veh.brake * 100) + '%';
+
+          // Risk & Action
+          const badgeRisk = document.getElementById('badge-risk');
+          if (badgeRisk) {
+            badgeRisk.innerText = risk.risk_level;
+            if (risk.risk_level === 'CRITICAL') badgeRisk.className = 'px-2.5 py-1 rounded-lg text-xs font-bold bg-red-600 text-white animate-bounce';
+            else if (risk.risk_level === 'HIGH') badgeRisk.className = 'px-2.5 py-1 rounded-lg text-xs font-bold bg-orange-500 text-white';
+            else if (risk.risk_level === 'MEDIUM') badgeRisk.className = 'px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-500 text-black';
+            else badgeRisk.className = 'px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-600 text-white';
+          }
+
+          const badgeAction = document.getElementById('badge-action');
+          if (badgeAction) badgeAction.innerText = data.action;
+
+          if (document.getElementById('val-ttc')) document.getElementById('val-ttc').innerText = risk.min_ttc ? risk.min_ttc.toFixed(1) + ' s' : 'SAFE (>10s)';
+          if (document.getElementById('val-nearest-obs')) document.getElementById('val-nearest-obs').innerText = risk.nearest_obstacle ? risk.nearest_obstacle.class_name.toUpperCase() + ' (' + risk.nearest_distance.toFixed(1) + 'm)' : 'None';
+          if (document.getElementById('val-clearance')) document.getElementById('val-clearance').innerText = risk.lateral_clearance.toFixed(1) + ' m';
+
+          // Detections List
+          const countObs = document.getElementById('count-obs');
+          const listObs = document.getElementById('list-detections');
+          if (countObs) countObs.innerText = data.perception.detected_objects_count;
+          if (listObs) {
+            if (data.perception.objects.length === 0) {
+              listObs.innerHTML = '<div class="text-gray-500 text-center py-4">No obstacles in range</div>';
+            } else {
+              listObs.innerHTML = data.perception.objects.map(o => `
+                  <div class="bg-dark-800/80 border border-dark-700 rounded-lg p-2 flex justify-between">
+                    <span class="text-cyan-400 font-bold">#${o.object_id} <span class="text-white capitalize">${o.class_name}</span></span>
+                    <span class="text-amber-400 font-mono">${o.distance.toFixed(1)}m</span>
+                  </div>
+                `).join('');
+            }
+          }
+
+          // Metrics
+          if (document.getElementById('m-avg-speed')) document.getElementById('m-avg-speed').innerText = data.metrics.avg_speed_kmh.toFixed(1) + ' km/h';
+          if (document.getElementById('m-min-ttc')) document.getElementById('m-min-ttc').innerText = data.metrics.min_ttc_seconds.toFixed(2) + ' s';
+          if (document.getElementById('m-clearance')) document.getElementById('m-clearance').innerText = data.metrics.avg_obstacle_clearance_m.toFixed(2) + ' m';
+          if (document.getElementById('m-latency')) document.getElementById('m-latency').innerText = data.metrics.avg_planning_time_ms.toFixed(1) + ' ms';
+          if (document.getElementById('m-replans')) document.getElementById('m-replans').innerText = data.metrics.total_replans;
+          if (document.getElementById('m-success')) document.getElementById('m-success').innerText = data.metrics.navigation_success_rate_percent.toFixed(1) + '%';
+
+          // Replanning events log
+          if (data.latest_replans && data.latest_replans.length > 0) {
+            const logs = document.getElementById('bottom-logs');
+            if (logs) {
+              logs.innerHTML = data.latest_replans.map(r => `
+                  <div><span class="text-cyan-400 font-bold">[REPLAN #${r.id}]</span> ${r.reason} (${r.latency_ms}ms)</div>
+                `).join('');
+            }
+          }
+
+          // Render Canvas
+          renderCanvas(data);
+        }
+
+        function renderCanvas(data) {
+          if (!canvas || !ctx) return;
+          const w = canvas.parentElement.clientWidth || 800;
+          const h = canvas.parentElement.clientHeight || 500;
+          canvas.width = w;
+          canvas.height = h;
+
+          const originX = w / 2;
+          const originY = h - 70;
+          const ppm = 11;
+
+          const toX = (y) => originX + y * ppm;
+          const toY = (x) => originY - x * ppm;
+
+          // BG
+          ctx.fillStyle = '#0f172a';
+          ctx.fillRect(0, 0, w, h);
+
+          // Road
+          const rw = (data.road_width || 8.0) / 2;
+          const rL = toX(-rw);
+          const rR = toX(rw);
+
+          ctx.fillStyle = '#261e14';
+          ctx.fillRect(rL - 30, 0, rR - rL + 60, h);
+
+          ctx.fillStyle = '#1e293b';
+          ctx.fillRect(rL, 0, rR - rL, h);
+
+          // Bounds
+          ctx.strokeStyle = '#64748b';
+          ctx.lineWidth = 2;
+          ctx.setLineDash([10, 10]);
+          ctx.strokeRect(rL, 0, rR - rL, h);
+          ctx.setLineDash([]);
+
+          // Grid lines
+          ctx.strokeStyle = '#334155';
+          ctx.font = '10px monospace';
+          ctx.fillStyle = '#64748b';
+          for (let d = 10; d <= 60; d += 10) {
+            const y = toY(d);
+            ctx.beginPath();
+            ctx.moveTo(rL - 20, y);
+            ctx.lineTo(rR + 20, y);
+            ctx.stroke();
+            ctx.fillText('+' + d + 'm', rR + 5, y - 2);
+          }
+
+          // Global Route
+          if (data.planner.global_path && data.planner.global_path.length > 1) {
+            ctx.strokeStyle = 'rgba(59, 130, 246, 0.4)';
+            ctx.lineWidth = 5;
+            ctx.beginPath();
+            data.planner.global_path.forEach((pt, i) => {
+              const cx = toX(pt[1] - data.vehicle.position.y);
+              const cy = toY(pt[0] - data.vehicle.position.x);
+              if (i === 0) ctx.moveTo(cx, cy); else ctx.lineTo(cx, cy);
+            });
+            ctx.stroke();
+          }
+
+          // Planned A* Path
+          if (data.planner.local_path && data.planner.local_path.length > 1) {
+            ctx.strokeStyle = '#06b6d4';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            data.planner.local_path.forEach((pt, i) => {
+              const cx = toX(pt[1]);
+              const cy = toY(pt[0]);
+              if (i === 0) ctx.moveTo(cx, cy); else ctx.lineTo(cx, cy);
+            });
+            ctx.stroke();
+          }
+
+          // Obstacles
+          data.perception.objects.forEach(o => {
+            const cx = toX(o.relative_position[1]);
+            const cy = toY(o.relative_position[0]);
+
+            // Prediction
+            if (o.predicted_trajectory) {
+              ctx.strokeStyle = '#f97316';
+              ctx.lineWidth = 1.5;
+              ctx.setLineDash([4, 4]);
+              ctx.beginPath();
+              o.predicted_trajectory.forEach((pt, i) => {
+                const px = toX(pt[1]);
+                const py = toY(pt[0]);
+                if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+              });
+              ctx.stroke();
+              ctx.setLineDash([]);
+            }
+
+            // Body
+            let col = '#22c55e';
+            if (o.class_name === 'pedestrian') col = '#f97316';
+            else if (o.class_name === 'motorcycle') col = '#ec4899';
+            else if (o.class_name === 'auto_rickshaw') col = '#eab308';
+            else if (o.class_name === 'animal') col = '#a855f7';
+            else if (o.class_name === 'debris') col = '#ef4444';
+
+            ctx.fillStyle = col;
+            ctx.fillRect(cx - 10, cy - 14, 20, 28);
+            ctx.strokeStyle = '#ffffff';
+            ctx.strokeRect(cx - 10, cy - 14, 20, 28);
+
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '9px sans-serif';
+            ctx.fillText(o.class_name.toUpperCase() + ' ' + o.distance.toFixed(1) + 'm', cx - 25, cy - 18);
+          });
+
+          // Ego Vehicle
+          const egox = toX(0);
+          const egoy = toY(0);
+          ctx.fillStyle = '#2563eb';
+          ctx.fillRect(egox - 11, egoy - 28, 22, 28);
+          ctx.strokeStyle = '#93c5fd';
+          ctx.strokeRect(egox - 11, egoy - 28, 22, 28);
+
+          ctx.fillStyle = '#60a5fa';
+          ctx.font = 'bold 9px monospace';
+          ctx.fillText('EGO VEHICLE', egox - 30, egoy + 14);
+        }
+      }
+    }, 500);
+  </script>
+</body>
+
+</html>

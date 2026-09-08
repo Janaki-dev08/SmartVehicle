@@ -1,0 +1,29 @@
+{
+  "id": "scenario_04",
+  "name": "Parked Vehicle Road Blockage",
+  "category": "Urban Congestion",
+  "difficulty": "Medium",
+  "description": "A stationary delivery car blocks 60% of the primary lane. The autonomous vehicle must detect the blockage, verify clearance, and execute an adaptive overtake maneuver.",
+  "road_width": 8.5,
+  "start_position": {
+    "x": 0.0,
+    "y": 0.0,
+    "heading": 0.0
+  },
+  "destination": {
+    "x": 140.0,
+    "y": 0.0
+  },
+  "actors": [
+    {
+      "id": 1,
+      "type": "car",
+      "rel_x": 30.0,
+      "rel_y": 0.2,
+      "rel_z": 0.0,
+      "speed": 0.0,
+      "heading": 0.0,
+      "behavior": "static"
+    }
+  ]
+}

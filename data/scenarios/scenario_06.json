@@ -1,0 +1,59 @@
+{
+  "id": "scenario_06",
+  "name": "Chaotic Mixed Traffic Stream",
+  "category": "Dense Urban",
+  "difficulty": "Expert",
+  "description": "Simultaneous presence of multiple vehicles: 2 motorcycles, an auto-rickshaw, a truck, and a cyclist moving at heterogeneous speeds.",
+  "road_width": 11.0,
+  "start_position": {
+    "x": 0.0,
+    "y": 0.0,
+    "heading": 0.0
+  },
+  "destination": {
+    "x": 160.0,
+    "y": 0.0
+  },
+  "actors": [
+    {
+      "id": 1,
+      "type": "auto_rickshaw",
+      "rel_x": 18.0,
+      "rel_y": -1.5,
+      "rel_z": 0.0,
+      "speed": 4.5,
+      "heading": 0.0,
+      "behavior": "forward"
+    },
+    {
+      "id": 2,
+      "type": "motorcycle",
+      "rel_x": 12.0,
+      "rel_y": 2.2,
+      "rel_z": 0.0,
+      "speed": 7.0,
+      "heading": -5.0,
+      "behavior": "overtake"
+    },
+    {
+      "id": 3,
+      "type": "truck",
+      "rel_x": 45.0,
+      "rel_y": 1.5,
+      "rel_z": 0.0,
+      "speed": 3.5,
+      "heading": 0.0,
+      "behavior": "forward_slow"
+    },
+    {
+      "id": 4,
+      "type": "motorcycle",
+      "rel_x": 32.0,
+      "rel_y": -2.8,
+      "rel_z": 0.0,
+      "speed": 6.0,
+      "heading": 0.0,
+      "behavior": "forward"
+    }
+  ]
+}

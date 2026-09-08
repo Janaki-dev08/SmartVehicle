@@ -1,0 +1,39 @@
+{
+  "id": "scenario_09",
+  "name": "Road Debris and Pothole Obstacle",
+  "category": "Unstructured Road Surface",
+  "difficulty": "Medium",
+  "description": "Roadside construction debris and deep pothole obstruction in the primary driving corridor, necessitating smooth local path diversion.",
+  "road_width": 8.0,
+  "start_position": {
+    "x": 0.0,
+    "y": 0.0,
+    "heading": 0.0
+  },
+  "destination": {
+    "x": 120.0,
+    "y": 0.0
+  },
+  "actors": [
+    {
+      "id": 1,
+      "type": "debris",
+      "rel_x": 25.0,
+      "rel_y": 0.1,
+      "rel_z": 0.0,
+      "speed": 0.0,
+      "heading": 0.0,
+      "behavior": "static"
+    },
+    {
+      "id": 2,
+      "type": "debris",
+      "rel_x": 55.0,
+      "rel_y": -1.2,
+      "rel_z": 0.0,
+      "speed": 0.0,
+      "heading": 0.0,
+      "behavior": "static"
+    }
+  ]
+}

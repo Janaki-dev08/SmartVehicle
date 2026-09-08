@@ -1,0 +1,31 @@
+{
+  "id": "scenario_03",
+  "name": "Jaywalking Pedestrian Crossing",
+  "category": "Urban Pedestrian",
+  "difficulty": "Hard",
+  "description": "Pedestrian jaywalks unpredictably across the road between stopped traffic without a pedestrian crossing. Tests emergency braking and pedestrian safety buffers.",
+  "road_width": 9.0,
+  "start_position": {
+    "x": 0.0,
+    "y": 0.0,
+    "heading": 0.0
+  },
+  "destination": {
+    "x": 110.0,
+    "y": 0.0
+  },
+  "actors": [
+    {
+      "id": 1,
+      "type": "pedestrian",
+      "rel_x": 22.0,
+      "rel_y": 4.0,
+      "rel_z": 0.0,
+      "speed": 1.4,
+      "heading": -90.0,
+      "behavior": "cross_road",
+      "target_y": -4.0,
+      "trigger_dist": 26.0
+    }
+  ]
+}
