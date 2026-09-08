@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # Adaptive Path Planning and Collision Avoidance for Autonomous Vehicles on Unstructured Indian Roads
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
@@ -541,6 +541,4 @@ If utilizing this codebase for academic research, benchmarking, or competition d
 }
 ```
 =======
-# SmartVehicle
-An autonomous vehicle platform built for unstructured Indian roads (jaywalkers, erratic cut-ins, cattle). It pairs YOLO perception and RL adaptive path planning with a deterministic TTC safety override ('AI decides, safety guarantees'). Powered by a FastAPI backend, CARLA/embedded physics, and a React dashboard with 20 Hz live telemetry.
->>>>>>> 65ad1865134e33e5457bf013fba99c2d7fa490b5
+
